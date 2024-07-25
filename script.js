@@ -1,47 +1,42 @@
-const rl = require("readline").createInterface({ input: process.stdin, output: process.stdout });
 
-function getComputerChoice() {
-  const arr = ['rock', 'paper', 'scissors'];
-  let getChoice = Math.floor(Math.random() * arr.length);
-  return arr[getChoice];   
-}
+// Wait for the DOM to be fully loaded before running the inside the
+// function 
+document.addEventListener('DOMContentLoaded', () => {
+  const options = document.querySelectorAll('.option');
 
-function getHumanChoice() {
-  let getChoice = prompt("Play rock, paper or scissors ");
-  return getChoice.toLowerCase();
-}
+  const userPick = document.querySelector('.user-pick');
+  const computerPick = document.querySelector('.computer-pick');
 
-let humanScore = 0;
-let computerScore = 0;
+  const result = document.querySelector('.result');
 
-function playRound(humanChoice, computerChoice) {
-  humanChoice = getHumanChoice();
-  computerChoice = getComputerChoice();
-  if (humanChoice === "rock" && computerChoice === "scissors") {
-    console.log(`You won ${humanChoice} beats ${computerChoice}🔥`);
-    humanScore++;
-    console.log(`Human score: ${humanScore}`);
-  } else if (humanChoice === "scissors" && computerChoice === "paper") {
-    console.log(`You won ${humanChoice} beats ${computerChoice}🔥`);
-     humanScore++;
-     console.log(`Human score: ${humanScore}`);
-  } else if (humanChoice === "paper" && computerChoice === "rock") {
-    console.log(`You won ${humanChoice} beats ${computerChoice}🔥`);
-     humanScore++;
-     console.log(`Human score: ${humanScore}`);
-  } else {
-    console.log(`You lose ${computerChoice} beats ${humanChoice}🤖`);
-    computerScore++;
-    console.log(`computer score: ${computerScore}`);
-  }
-}
+  options.forEach(option => option.addEventListener('click', (elem) => {
+    const userChoice = elem.target.id.replace('You pick: ', '');
+    userPick.textContent = `You pick: ${userChoice}`;
 
-function playGame() {
-  for (let i=0; i<5; i++) {
-    playRound();
-  }
-}
+    const computerChoice = getComputerPick();
+    computerPick.textContent = `Computer pick: ${computerChoice}`;
 
+    const gameResult = getGameResult(userChoice, computerChoice);
+    result.textContent = `RESULT: ${gameResult}`;
+  }));
 
+    const getGameResult = (userChoice, computerChoice) => {
+      if (userChoice === computerChoice) {
+        return "It's a DRAW🤝"
+      } else if (
+        (userChoice === 'rock' && computerChoice === 'scissors') ||
+        (userChoice === 'scissors' && computerChoice === 'paper') ||
+        (userChoice === 'paper' && computerChoice=== 'rock')
+      ) {
+        return 'You WIN!'
+      }
+      return 'Computer Win'
+      
+    };
 
-
+    const getComputerPick = () => {
+      const options = ['rock', 'paper', 'scissors'];
+      const getElement = Math.floor(Math.random() * options.length);
+      return options[getElement];
+    };
+});
